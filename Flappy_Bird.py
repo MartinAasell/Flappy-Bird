@@ -1,3 +1,4 @@
+# MAIN file, where all the game logic is
 import pygame
 from pipe import Pipe
 from bird import Bird
@@ -5,6 +6,7 @@ from base import Base
 from constants import *
 pygame.init()
 
+# Drawing the window
 def draw_win(win, bird, pipes, base, score):
     win.blit(BG_IMG, (0,0))
     for pipe in pipes:
@@ -15,6 +17,7 @@ def draw_win(win, bird, pipes, base, score):
     bird.draw(win)
     pygame.display.update()
 
+# If player loses
 def end_screen(win, bird, pipes, base, score, lose):
     run = True
     while run:
@@ -31,6 +34,7 @@ def end_screen(win, bird, pipes, base, score, lose):
         redraw_win(win, bird, pipes, base, score)
         pygame.display.update()
 
+# Draw window when losing
 def redraw_win(win, bird, pipes, base, score):
     win.blit(BG_IMG, (0,0))
     for pipe in pipes:
@@ -42,6 +46,7 @@ def redraw_win(win, bird, pipes, base, score):
     draw_cont(win)
     pygame.display.update()
 
+# Text when losing
 def draw_lose(win):
     lose_text = STAT_FONT.render("YOU LOSE!", 1, (255, 255, 255))
     win.blit(lose_text, ((WIN_WIDTH-lose_text.get_width())//2, WIN_HEIGHT//4))
@@ -53,6 +58,7 @@ def draw_cont(win):
     win.blit(RETURN_IMG, ((170, WIN_HEIGHT//4+press.get_height()*5-8)))
     win.blit(cont, ((230, WIN_HEIGHT//4+press.get_height()*5)))
 
+# Updates the score
 def update_score(score):
     f = open('scores.txt','r')
     file = f.readlines()
@@ -65,16 +71,18 @@ def update_score(score):
         return score
     return last
 
-
+# Displaying the score
 def draw_scores(win, score):
     current_score = STAT_FONT.render("Your Score: " + str(score), 1, (255, 255, 255))
     best_score = STAT_FONT.render("Best Score: " + str(update_score(score)), 1, (255, 255, 255))
     win.blit(current_score,((WIN_WIDTH-current_score.get_width())//2, WIN_HEIGHT//4+current_score.get_height()*2))
     win.blit(best_score, ((WIN_WIDTH-best_score.get_width())//2, WIN_HEIGHT//4+best_score.get_height()*3))
 
+# Replayabilty
 def replay(win):
     main()
 
+# Game loop
 def main():
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()

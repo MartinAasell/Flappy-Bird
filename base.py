@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 
+# The base class, (the ground)
 class Base:
     VEL = 5
     WIDTH = BASE_IMG.get_width()

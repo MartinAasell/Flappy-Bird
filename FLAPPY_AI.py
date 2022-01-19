@@ -1,3 +1,5 @@
+# NOT YET IMPLEMENTED
+
 import pygame
 import neat
 import time

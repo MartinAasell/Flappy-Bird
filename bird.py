@@ -2,6 +2,7 @@ from multiprocessing.spawn import import_main_path
 from constants import *
 import pygame
 
+# Bird class, handles everything with the bird
 class Bird:
     IMGS = BIRD_IMAGES
     MAX_ROTATION = 25

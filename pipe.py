@@ -1,3 +1,4 @@
+# Hanles the pipes
 import pygame
 import random
 from constants import *
