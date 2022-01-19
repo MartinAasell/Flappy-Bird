@@ -6,13 +6,45 @@ from base import Base
 from constants import *
 pygame.init()
 
-# Drawing the window
+# Start menu
+def start_menu(win, bird, base):
+    win.blit(BG_IMG, (0,0))
+    base.draw(win)
+    bird.draw(win)
+    win.blit(LOGO_IMG, ((WIN_WIDTH-LOGO_IMG.get_width())//2, 100))
+    current_hs = STAT_FONT.render("Current Highscore: " + str(update_score(0)), 1, (255, 255, 255))
+    start_text = STAT_FONT.render("Press Space To Play! ", 1, (255, 255, 255))
+    win.blit(current_hs, ((WIN_WIDTH-current_hs.get_width())//2, 560))
+    win.blit(start_text, ((WIN_WIDTH-start_text.get_width())//2,460))
+    # win.blit(PLAY_IMG, ((WIN_WIDTH-PLAY_IMG.get_width())//2, 470))
+    pygame.display.update()
+
+def start_game():
+    win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    run = True
+    bird = Bird(230,350)
+    base = Base(730)
+    clock = pygame.time.Clock()
+    while run:
+        clock.tick(30)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    main_game()
+        start_menu(win, bird, base)
+        base.move()
+
+# Drawing the gamewindow
 def draw_win(win, bird, pipes, base, score):
     win.blit(BG_IMG, (0,0))
     for pipe in pipes:
         pipe.draw(win)
     text = STAT_FONT.render("Score: " + str(score), 1, (255,255,255))
-    win.blit(text, (WIN_WIDTH-10-text.get_width(), 10))
+    win.blit(text, ((WIN_WIDTH-text.get_width())//2, 100))
     base.draw(win)
     bird.draw(win)
     pygame.display.update()
@@ -27,8 +59,8 @@ def end_screen(win, bird, pipes, base, score, lose):
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    replay(win)
+                if event.key == pygame.K_SPACE:
+                    start_game()
         if bird.y + bird.img.get_height() < 730:
             bird.move()
         redraw_win(win, bird, pipes, base, score)
@@ -41,22 +73,16 @@ def redraw_win(win, bird, pipes, base, score):
         pipe.draw(win)
     base.draw(win)
     bird.draw(win)
-    draw_lose(win)
+    draw_losing_msg(win)
     draw_scores(win, score)
-    draw_cont(win)
     pygame.display.update()
 
 # Text when losing
-def draw_lose(win):
-    lose_text = STAT_FONT.render("YOU LOSE!", 1, (255, 255, 255))
+def draw_losing_msg(win):
+    lose_text = STAT_FONT.render("GAME OVER!", 1, (255, 255, 255))
     win.blit(lose_text, ((WIN_WIDTH-lose_text.get_width())//2, WIN_HEIGHT//4))
-    
-def draw_cont(win):
-    press = STAT_FONT.render("Press: ", 1, (255,255,255))
-    cont = STAT_FONT.render("To Play Again!", 1, (255, 255, 255))
-    win.blit(press, ((50, WIN_HEIGHT//4+press.get_height()*5)))
-    win.blit(RETURN_IMG, ((170, WIN_HEIGHT//4+press.get_height()*5-8)))
-    win.blit(cont, ((230, WIN_HEIGHT//4+press.get_height()*5)))
+    press = STAT_FONT.render("Press Space To Play Again!", 1, (255,255,255))
+    win.blit(press, (((WIN_WIDTH-press.get_width())//2, WIN_HEIGHT//4+press.get_height()*5)))
 
 # Updates the score
 def update_score(score):
@@ -78,12 +104,9 @@ def draw_scores(win, score):
     win.blit(current_score,((WIN_WIDTH-current_score.get_width())//2, WIN_HEIGHT//4+current_score.get_height()*2))
     win.blit(best_score, ((WIN_WIDTH-best_score.get_width())//2, WIN_HEIGHT//4+best_score.get_height()*3))
 
-# Replayabilty
-def replay(win):
-    main()
 
 # Game loop
-def main():
+def main_game():
     win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()
     bird = Bird(230,350)
@@ -123,7 +146,6 @@ def main():
             pipes.append(Pipe(600))
         for r in rem:
             pipes.remove(r)
-
         draw_win(win, bird, pipes, base, score)   
         if bird.y + bird.img.get_height() >= 730:
             lose = True
@@ -133,6 +155,13 @@ def main():
     pygame.quit()
     quit()
 
+# # Replayabilty
+# def replay(win):
+#     start_game()
+
+
+def main():
+    start_game()
 
 if __name__=="__main__":
     main()
